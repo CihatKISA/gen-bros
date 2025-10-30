@@ -5,6 +5,19 @@ export const topicGeneratorSchema = z.object({
   category: z.string().min(1, 'Category is required').max(100, 'Category must be less than 100 characters'),
 })
 
+// Schema for a single topic from the AI response
+export const topicSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  contentType: z.string().min(1, 'Content type is required'),
+  hashtags: z.array(z.string()).nonempty('Hashtags are required'),
+  targetAudience: z.string().min(1, 'Target audience is required'),
+  engagementHook: z.string().min(1, 'Engagement hook is required'),
+});
+
+// Schema for the entire AI response (an array of topics)
+export const topicApiResponseSchema = z.array(topicSchema);
+
 // Save Topic Schema
 export const saveTopicSchema = z.object({
   toolId: z.string(),
