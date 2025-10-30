@@ -4,6 +4,10 @@ import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import path from 'path'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
+import { Users } from './collections/Users'
+import { ToolModules } from './collections/ToolModules'
+import { Categories } from './collections/Categories'
+import { SavedTopics } from './collections/SavedTopics'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -14,8 +18,11 @@ export default buildConfig({
     importMap: {
       baseDir: path.resolve(dirname),
     },
+    meta: {
+      titleSuffix: '- AI Content Topic Generator',
+    },
   },
-  collections: [],
+  collections: [Users, ToolModules, Categories, SavedTopics],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -25,7 +32,15 @@ export default buildConfig({
     pool: {
       connectionString: process.env.DATABASE_URL || '',
     },
+    migrationDir: path.resolve(dirname, '../migrations'),
+    push: process.env.NODE_ENV === 'development',
   }),
   sharp,
   plugins: [],
+  cors: [
+    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  ],
+  csrf: [
+    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  ],
 })

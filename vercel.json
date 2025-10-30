@@ -1,0 +1,42 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "regions": ["iad1"],
+  "env": {
+    "DATABASE_URL": "@database_url",
+    "PAYLOAD_SECRET": "@payload_secret",
+    "OPENAI_API_KEY": "@openai_api_key",
+    "NEXT_PUBLIC_APP_URL": "@next_public_app_url",
+    "NODE_ENV": "production",
+    "UPSTASH_REDIS_REST_URL": "@upstash_redis_rest_url",
+    "UPSTASH_REDIS_REST_TOKEN": "@upstash_redis_rest_token"
+  },
+  "build": {
+    "env": {
+      "DATABASE_URL": "@database_url",
+      "PAYLOAD_SECRET": "@payload_secret",
+      "OPENAI_API_KEY": "@openai_api_key",
+      "NEXT_PUBLIC_APP_URL": "@next_public_app_url",
+      "NODE_ENV": "production"
+    }
+  },
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, must-revalidate"
+        }
+      ]
+    }
+  ]
+}

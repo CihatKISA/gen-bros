@@ -38,11 +38,21 @@ export const loginSchema = z.object({
 
 // Environment Variables Schema
 export const envSchema = z.object({
-  DATABASE_URL: z.string().url(),
-  PAYLOAD_SECRET: z.string().min(32),
-  OPENAI_API_KEY: z.string().startsWith('sk-'),
-  UPSTASH_REDIS_URL: z.string().url().optional(),
-  UPSTASH_REDIS_TOKEN: z.string().optional(),
-  NEXT_PUBLIC_APP_URL: z.string().url(),
-  NODE_ENV: z.enum(['development', 'production', 'test']),
+  // Required variables
+  DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
+  PAYLOAD_SECRET: z.string().min(32, 'PAYLOAD_SECRET must be at least 32 characters'),
+  OPENAI_API_KEY: z.string().startsWith('sk-', 'OPENAI_API_KEY must start with sk-'),
+  NEXT_PUBLIC_APP_URL: z.string().url('NEXT_PUBLIC_APP_URL must be a valid URL'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
+  
+  // Optional variables
+  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+  PAYLOAD_PUBLIC_SERVER_URL: z.string().url().optional(),
+  
+  // Optional email configuration
+  SMTP_HOST: z.string().optional(),
+  SMTP_PORT: z.string().optional(),
+  SMTP_USER: z.string().optional(),
+  SMTP_PASS: z.string().optional(),
 })
