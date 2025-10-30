@@ -111,8 +111,16 @@ describe('POST /api/tools/generate-topics', () => {
     })
 
     // Mock AI service
+    const mockTopic = {
+      title: 'Test Topic',
+      description: 'A valid description.',
+      contentType: 'Listicle',
+      hashtags: ['#testing', '#mock'],
+      targetAudience: 'Developers',
+      engagementHook: 'What do you think?',
+    };
     vi.mocked(generateCompletion).mockResolvedValue({
-      content: JSON.stringify([{ title: 'Test' }]),
+      content: JSON.stringify([mockTopic]),
       tokensUsed: 100,
       model: 'gpt-4',
       processingTime: 500,

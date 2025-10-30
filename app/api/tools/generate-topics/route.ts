@@ -5,7 +5,7 @@ import config from '@/src/payload/payload.config'
 import { generateCompletion } from '@/src/lib/ai/service'
 import { buildTopicGeneratorPrompt, SYSTEM_PROMPTS } from '@/src/lib/ai/prompts'
 import { checkRateLimit } from '@/src/lib/ai/rate-limiter'
-import { topicGeneratorSchema } from '@/src/lib/validation/schemas'
+import { topicGeneratorSchema, topicApiResponseSchema } from '@/src/lib/validation/schemas'
 import { sanitizeCategory } from '@/src/lib/validation/sanitize'
 import { handleError } from '@/src/lib/errors/handler'
 import { getToolBySlug, updateUserUsageStats } from '@/src/lib/db'
@@ -78,8 +78,9 @@ export async function POST(request: NextRequest) {
       category,
     })
 
-    // Parse the AI response
-    const topics = JSON.parse(result.content)
+    // Parse and validate the AI response
+    const parsedContent = JSON.parse(result.content)
+    const topics = topicApiResponseSchema.parse(parsedContent)
 
     // Update usage stats if authenticated using optimized function
     if (user) {
