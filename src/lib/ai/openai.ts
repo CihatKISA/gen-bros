@@ -1,20 +1,41 @@
-import OpenAI from 'openai';
+import OpenAI from 'openai'
+import { getPayload } from 'payload'
 
-// Validate OpenAI API key
-if (!process.env.OPENAI_API_KEY) {
-  throw new Error('OPENAI_API_KEY environment variable is not defined');
+// Async function to get the OpenAI client
+export async function getOpenAIClient(): Promise<OpenAI> {
+  const payload = await getPayload()
+
+  // Fetch the most recent enabled OpenAI key from the database
+  const result = await payload.find({
+    collection: 'llm-keys',
+    where: {
+      provider: {
+        equals: 'openai',
+      },
+      isEnabled: {
+        equals: true,
+      },
+    },
+    sort: '-createdAt',
+    limit: 1,
+  })
+
+  if (result.docs.length === 0) {
+    throw new Error('No active OpenAI API key found in the database.')
+  }
+
+  const apiKey = result.docs[0].apiKey
+
+  if (!apiKey || !apiKey.startsWith('sk-')) {
+    throw new Error('Invalid OpenAI API key found in the database.')
+  }
+
+  return new OpenAI({
+    apiKey,
+  })
 }
-
-if (!process.env.OPENAI_API_KEY.startsWith('sk-')) {
-  throw new Error('OPENAI_API_KEY must start with "sk-"');
-}
-
-// Initialize OpenAI client
-export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
 
 // Default configuration settings
-export const DEFAULT_MODEL = 'gpt-4o-mini';
-export const MAX_TOKENS = 2000;
-export const TEMPERATURE = 0.7;
+export const DEFAULT_MODEL = 'gpt-4o-mini'
+export const MAX_TOKENS = 2000
+export const TEMPERATURE = 0.7

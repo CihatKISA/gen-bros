@@ -9,6 +9,7 @@
     "lint": "biome check",
     "format": "biome format --write",
     "seed": "tsx src/scripts/seed.ts",
+    "create-admin": "tsx src/scripts/create-admin.ts",
     "validate-env": "tsx src/scripts/validate-env.ts",
     "test": "vitest --run",
     "test:watch": "vitest",

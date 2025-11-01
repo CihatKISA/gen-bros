@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic';
 import { useAuth } from '@/src/lib/hooks/useAuth';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
+import LlmKeysPage from '@/app/dashboard/admin/llm-keys/page';
 
 // Lazy load SavedTopicsList since it fetches data and renders many components
 const SavedTopicsList = dynamic(
@@ -42,6 +43,9 @@ export function DashboardLayout() {
         <TabsList>
           <TabsTrigger value="topic-generator">Topic Generator</TabsTrigger>
           <TabsTrigger value="settings">Settings</TabsTrigger>
+          {user?.role === 'admin' && (
+            <TabsTrigger value="admin-llm-keys">LLM Keys</TabsTrigger>
+          )}
         </TabsList>
 
         <TabsContent value="topic-generator" className="space-y-4">
@@ -53,6 +57,12 @@ export function DashboardLayout() {
             Settings coming soon
           </div>
         </TabsContent>
+
+        {user?.role === 'admin' && (
+          <TabsContent value="admin-llm-keys" className="space-y-4">
+            <LlmKeysPage />
+          </TabsContent>
+        )}
       </Tabs>
     </div>
   );

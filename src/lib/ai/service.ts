@@ -1,4 +1,4 @@
-import { openai, DEFAULT_MODEL, MAX_TOKENS, TEMPERATURE } from './openai';
+import { getOpenAIClient, DEFAULT_MODEL, MAX_TOKENS, TEMPERATURE } from './openai';
 import { logAIRequest, logError } from '../logger';
 import { monitorAIRequest } from '../performance/monitoring';
 
@@ -37,6 +37,8 @@ export async function generateCompletion(
   const startTime = Date.now();
   const maxRetries = 3;
   let lastError: Error | null = null;
+
+  const openai = await getOpenAIClient();
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {

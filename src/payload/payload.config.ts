@@ -8,6 +8,7 @@ import { Users } from './collections/Users'
 import { ToolModules } from './collections/ToolModules'
 import { Categories } from './collections/Categories'
 import { SavedTopics } from './collections/SavedTopics'
+import { LlmKeys } from './collections/LlmKeys'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -22,7 +23,7 @@ export default buildConfig({
       titleSuffix: '- AI Content Topic Generator',
     },
   },
-  collections: [Users, ToolModules, Categories, SavedTopics],
+  collections: [Users, ToolModules, Categories, SavedTopics, LlmKeys],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
@@ -33,7 +34,7 @@ export default buildConfig({
       connectionString: process.env.DATABASE_URL || '',
     },
     migrationDir: path.resolve(dirname, '../migrations'),
-    push: process.env.NODE_ENV === 'development',
+    push: true,
   }),
   sharp,
   plugins: [],
